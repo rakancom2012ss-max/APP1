@@ -1,0 +1,67 @@
+{
+    "Owners": ["الي يتحكم بالتقديمات"],
+    "BotToken" : "توكن بوتك",
+    "AcceptRole" : ["رتبة واحد","رتبة ثنين","رتبة ثلاثة","رتبة رابعه"],
+    "guildId" : "ايدي سيرفرك",
+    "siteName": "الاسم الرئيسي",
+    "siteDescription": "الوصف",
+    "aboutUs": "اكتب وصف عنكم هنا ( من نحن )",
+    "features": [
+        {
+            "icon": "palette",
+            "text": "صفة من صفاتكم هنا"
+        },
+        {
+            "icon": "clock",
+            "text": "هنا صفة من صفاتكم "
+        },
+        {
+            "icon": "briefcase",
+            "text": "صفة من صفاتكم هنا"
+        }
+    ],
+    "submissions": [
+        {
+            "icon": "user",
+            "title": "الاسم الكامل",
+            "description": "يرجى إدخال اسمك الأول والأخير",
+            "type": "text",
+            "required": true
+        },
+        {
+            "icon": "id-card",
+            "title": "ايديك الوطني",
+            "description": "يرجى منك ادخال ايديك الوطني الصحيح",
+            "type": "text",
+            "required": true
+        },
+        {
+            "icon": "calendar",
+            "title": "عمرك الحقيقي",
+            "description": "يرجى ادخال عمرك ",
+            "type": "number",
+            "required": true
+        },
+        {
+            "icon": "briefcase",
+            "title": "المهنة",
+            "description": "ما هي مهنتك الحالية؟",
+            "type": "text",
+            "required": true
+        },
+        {
+            "icon": "star",
+            "title": "خبراتك ",
+            "description": "يرجى منك كتابة خبراتك ",
+            "type": "textarea",
+            "required": true
+        },
+        {
+            "icon": "question-circle",
+            "title": "سبب التقديم",
+            "description": "لماذا ترغب في الانضمام إلينا؟",
+            "type": "textarea",
+            "required": true
+        }
+    ]
+}

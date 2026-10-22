@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= config.siteName %> - لوحة التحكم الإدارية</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="/colors.css">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: var(--container-background);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+        }
+        .welcome-message {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .welcome-message h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .submissions-list {
+            margin-top: 3rem;
+        }
+        .submission-item {
+            background-color: var(--container-background);
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        .submission-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .submission-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+        .action-button {
+            padding: 0.7rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            margin-left: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            outline: none;
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        .approve-button {
+            background-color: #4CAF50;
+        }
+        .approve-button:hover {
+            background-color: #45a049;
+        }
+        .reject-button {
+            background-color: #f44336;
+        }
+        .reject-button:hover {
+            background-color: #da190b;
+        }
+        .logout-button {
+            background-color: var(--secondary-color);
+            margin-top: 3rem;
+            display: block;
+            width: 200px;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .logout-button:hover {
+            background-color: var(--tertiary-color);
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="welcome-message">
+            <h1>لوحة التحكم الإدارية - <%= config.siteName %></h1>
+            <p>مرحباً بك، <%= user.username %>. هنا يمكنك إدارة التقديمات.</p>
+        </div>
+        
+        <h2>قائمة التقديمات</h2>
+        <div class="submissions-list">
+            <% submissions.forEach(submission => { %>
+                <div class="submission-item">
+                    <h3>تقديم رقم <%= submission.id %></h3>
+                    <% for (const [key, value] of Object.entries(submission)) { %>
+                        <% if (!['id', 'userId', 'status', 'submissionDate', 'isNew'].includes(key) && typeof value !== 'object') { %>
+                            <p><strong><%= key %>:</strong> <%= value %></p>
+                        <% } %>
+                    <% } %>
+                    <p><strong>تاريخ التقديم:</strong> <%= new Date(submission.submissionDate).toLocaleString() %></p>
+                    <p><strong>الحالة:</strong> <%= submission.status %></p>
+                    <div class="submission-actions">
+                        <button class="action-button approve-button" onclick="approveSubmission('<%= submission.id %>')">قبول</button>
+                        <button class="action-button reject-button" onclick="rejectSubmission('<%= submission.id %>')">رفض</button>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+        <a href="/logout" class="action-button logout-button">تسجيل الخروج</a>
+    </div>
+    <script>
+        function approveSubmission(submissionId) {
+            updateSubmissionStatus(submissionId, 'approved');
+        }
+
+        function rejectSubmission(submissionId) {
+            updateSubmissionStatus(submissionId, 'rejected');
+        }
+
+        function updateSubmissionStatus(submissionId, status) {
+            fetch('/admin/update-submission', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ submissionId, status }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('تم تحديث حالة التقديم بنجاح');
+                    location.reload();
+                } else {
+                    alert('حدث خطأ أثناء تحديث حالة التقديم');
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('حدث خطأ أثناء تحديث حالة التقديم');
+            });
+        }
+    </script>
+</body>
+</html>

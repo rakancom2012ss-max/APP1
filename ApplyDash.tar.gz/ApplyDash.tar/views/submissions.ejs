@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= config.siteName %> - صفحة التقديمات</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/index.css">
+    <link rel="stylesheet" href="/colors.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .submissions-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .welcome-message {
+            text-align: center;
+            margin-bottom: 2rem;
+            background-color: var(--container-background);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .submission-form {
+            background-color: var(--container-background);
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-button {
+            background-color: var(--secondary-color);
+        }
+
+        .logout-button {
+            background-color: var(--tertiary-color);
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .fas {
+            margin-left: 0.5rem;
+        }
+
+        .submit-button {
+            width: 100%;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="submissions-container">
+        <header class="welcome-message">
+            <h1>صفحة التقديمات</h1>
+            <p>مرحباً بك <%= user.username %> في صفحة التقديمات</p>
+        </header>
+        
+        <main>
+            <h2>التقديم</h2>
+            <div class="submission-form">
+                <form id="submissionForm">
+                    <% config.submissions.forEach(submission => { %>
+                        <div class="form-group">
+                            <label for="<%= submission.title %>">
+                                <i class="fas fa-<%= submission.icon %>"></i>
+                                <%= submission.title %>
+                            </label>
+                            <% if (submission.type === 'textarea') { %>
+                                <textarea id="<%= submission.title %>" name="<%= submission.title %>" placeholder="<%= submission.description %>" required></textarea>
+                            <% } else { %>
+                                <input type="<%= submission.type %>" id="<%= submission.title %>" name="<%= submission.title %>" placeholder="<%= submission.description %>" required>
+                            <% } %>
+                        </div>
+                    <% }); %>
+                    <button type="submit" class="button submit-button">تقديم</button>
+                </form>
+            </div>
+        </main>
+
+        <footer class="button-container">
+            <a href="/dashboard" class="button dashboard-button">
+                <i class="fas fa-tachometer-alt"></i> العودة للوحة التحكم
+            </a>
+            <a href="/logout" class="button logout-button">
+                <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+            </a>
+        </footer>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css">
+    <script>
+        const notyf = new Notyf({
+            duration: 3000,
+            position: {x: 'left', y: 'bottom'},
+            types: [
+                {
+                    type: 'success',
+                    background: '#28a745',
+                    icon: {
+                        className: 'fas fa-check-circle',
+                        tagName: 'i',
+                        color: '#fff'
+                    }
+                },
+                {
+                    type: 'error',
+                    background: '#dc3545',
+                    icon: {
+                        className: 'fas fa-times-circle',
+                        tagName: 'i',
+                        color: '#fff'
+                    }
+                }
+            ]
+        });
+
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            fetch('/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    notyf.success('تم إرسال التقديم بنجاح');
+                    setTimeout(() => {
+                        window.location.href = '/submissions';
+                    }, 2000);
+                } else {
+                    notyf.error(result.error || 'حدث خطأ أثناء إرسال التقديم');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                notyf.error('حدث خطأ أثناء إرسال التقديم');
+            });
+        });
+    </script>
+</body>
+</html>
